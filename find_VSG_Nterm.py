@@ -13,7 +13,7 @@ def hmmscan_type(hmmscan_infile, path_hmm, profile_name):
 	hmmscan searches each sequence against the A and B merged profile.
 	"""
 
-	hmmscan_out_base = os.path.splitext(hmmscan_infile)[0] # FASTA file containing trimmed variants of the input sequence(s) w/o extension.
+	hmmscan_out_base = os.path.splitext(hmmscan_infile)[0] # FASTA file containing input sequence(s) w/o extension.
 
 	# Use N-terminal Domain HMM Profile to find and type N-domain sequence
 	Type_file = hmmscan_out_base + "_Type.out" # Name for hmmscan table output file
@@ -21,11 +21,11 @@ def hmmscan_type(hmmscan_infile, path_hmm, profile_name):
 
 	hmmscan_out_files = []
 
-#	for file in os.listdir(os.getcwd()):
-#		if file.endswith("_Type.out"):
-#			hmmscan_out_files.append(file)
-#	if len(hmmscan_out_files) != 1:
-#		sys.exit("HMMER hmmscan output files were not created or more output files were found than created.")
+	for file in os.listdir(os.getcwd()):
+		if file.endswith("_Type.out"):
+			hmmscan_out_files.append(file)
+	if len(hmmscan_out_files) != 1:
+		sys.exit("HMMER hmmscan output files were not created or more output files were found than created.")
 
 def Nterm_trim_hmm(hmmscan_out, original_seq_file):
 	"""
@@ -34,7 +34,7 @@ def Nterm_trim_hmm(hmmscan_out, original_seq_file):
 	"""
 	#hmmscan.out files report each hit in ranked order, with best scoring hit first
 	#we noticed that hmmscan very often reported two high quality domain hits when set to an e-value threshold of 1e-5
-	#these hits often overlapped. therefore, we define the N-domain boundary by the rightmost coordinate
+	#these hits tend to overlap. therefore, we define the N-domain boundary by the rightmost coordinate
 	type_dict = {}
 	with open(hmmscan_out, 'r') as f:
 	    for line in f.readlines():
@@ -127,12 +127,12 @@ except subprocess.CalledProcessError:
 
 infile_base = os.path.splitext(infile)[0] # Input filename as string w/o extension.
 
-#sys.stdout = open(infile_base + "_Nterm_stdout.txt", 'w')  # write all unix output to txt file
+sys.stdout = open(infile_base + "_Nterm_stdout.txt", 'w')  # write all unix output to txt file
 
 if not os.path.exists(infile):
 	sys.exit("%r does not exist." % infile)
 else:
-	print "%r found.\n" % infile
+	print("%r found.\n" % infile)
 	if not os.path.exists(path_hmm):
 		sys.exit("Path to HMM profiles does not exist.")
 	else:
@@ -144,15 +144,15 @@ nterms_final_file = infile_base + "_Nterms.fa"
 if os.path.exists(nterms_final_file):
 	sys.exit("%r already exists." % nterms_final_file)
 
-print "\nProceeding to HMMER hmmscan analysis that will determine the type of the N-terminal domain(s)..."
+print("\nProceeding to HMMER hmmscan analysis that will determine the type of the N-terminal domain(s)...")
 hmmscan_type(infile, path_hmm, str('VSG-N-mergeAB'))
 hmmscan_first_pass = os.path.splitext(infile)[0] + "_Type.out"
 first_pass_seqs, first_pass_types, first_pass_fails = Nterm_trim_hmm(hmmscan_first_pass, infile)
 
-print "\nFailed to determine N-terminal domain sequences in input file:"
-print bool(first_pass_fails)
+print("\nFailed to determine N-terminal domain sequences in input file:")
+print(bool(first_pass_fails))
 if bool(first_pass_fails) == True:
-	print "\nProceeding to HMMER recovery hmmscan analysis on sequence(s) that failed first pass..."
+	print("\nProceeding to HMMER recovery hmmscan analysis on sequence(s) that failed first pass...")
 	fail_file = os.path.splitext(infile)[0] + "_first_pass_fails.fa"
 	with open(fail_file, "w") as fail:
 		for ID, seq in first_pass_fails.items():
@@ -168,7 +168,7 @@ if bool(first_pass_fails) == True:
 	All_N_seqs.update(second_pass_seqs)
 	All_N_types = first_pass_types.copy()
 	All_N_types.update(second_pass_types)
-	print "%r contains sequence(s) with undefined N-terminal domain(s).\n" % (infile_base+"_undefinedNdomain.fa")
+	print("%r contains sequence(s) with undefined N-terminal domain(s).\n" % (infile_base+"_undefinedNdomain.fa"))
 
 else:
 	All_N_seqs = first_pass_seqs
@@ -178,11 +178,11 @@ with open(nterms_final_file, "w") as final:
 	for ID, seq in All_N_seqs.items():
 		final.write(">"+ID+'\n'+str(seq)+'\n')
 
-print "N-terminal domains identified.\n"
+print("N-terminal domains identified.\n")
 
-print "Proceeding to second HMMER hmmscan analysis that will determine the subtype of the identified N-terminal domain(s)..."
+print("Proceeding to second HMMER hmmscan analysis that will determine the subtype of the identified N-terminal domain(s)...")
 hmmscan_subtype(nterms_final_file, path_hmm)
-print "HMMER hmmscan analysis complete.\n"
+print("HMMER hmmscan analysis complete.\n")
 
 all_original_seqIDs = []
 
@@ -195,9 +195,9 @@ for file in os.listdir(os.getcwd()):
 		fourth_line = str(linecache.getline(file, 4))
 		if not empty in fourth_line:
 			typed_nterms = nterm_subtype_ID(file) # Dictionary - {N-terminal domain sequence ID: type-subtype}.
-			print "Found most probable type and subtype of the identified N-terminal domain(s) in %r.\n" % file
+			print("Found most probable type and subtype of the identified N-terminal domain(s) in %r.\n" % file)
 
-print "Preparing summary report..."
+print("Preparing summary report...")
 
 with open(infile_base+"_NtermSummary.csv", "w") as summary:
 	summary.write('original_seqID,original_seq_length,nterm_seq_length,HMM_profile,nterm_typesubtype\n')
@@ -218,10 +218,9 @@ with open(infile_base+"_NtermSummary.csv", "w") as summary:
 	else:
 		summary.close()
 
-# this was never a me problem. the missing VSG are not making it into the nterm_subtype_ID dictionary but they ARE IN THE HMMSCAN OUTPUT!!!!
-# I am angry
 
-print "%r contains information about the identified N-terminal domain sequence(s).\n" % (infile_base+"_NtermSummary.csv")
+
+print("%r contains information about the identified N-terminal domain sequence(s).\n" % (infile_base+"_NtermSummary.csv"))
 
 #clean up output files
 #Move all HMMER hmmscan input and output files to a subdirectory.
@@ -231,4 +230,4 @@ subprocess.call(['mv *.out *hmmscan.txt '+infile_base+"_HMMSCAN"], shell=True)
 subprocess.call(['mkdir -p '+infile_base+"_Sequences"], shell=True)
 subprocess.call(['mv *.fa '+infile_base+"_Sequences"], shell=True)
 
-print "Finished with %r." % infile
+print("Finished with %r." % infile)
