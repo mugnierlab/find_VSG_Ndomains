@@ -21,9 +21,9 @@ python find_VSG_Nterm.py file path
 For more details about arguments see [Input](#input).
 
 ## Required Software
-* [Python](https://www.python.org/) (written using Python 2.7.15)
-* [Biopython](https://anaconda.org/anaconda/biopython) (written using version 1.68)
-* [pandas](https://anaconda.org/anaconda/pandas) (written using version 0.24.2)
+* [Python](https://www.python.org/) (tested using Python 3.11.0)
+* [Biopython](https://anaconda.org/anaconda/biopython) (tested using version 1.78)
+* [pandas](https://anaconda.org/anaconda/pandas) (tested using version 1.5.3)
 * [HMMER](http://hmmer.org) (written using version 3.1b2)
 	- HMMER must be installed in PATH.
 
