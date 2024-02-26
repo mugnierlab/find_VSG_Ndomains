@@ -21,11 +21,11 @@ def hmmscan_type(hmmscan_infile, path_hmm, profile_name):
 
 	hmmscan_out_files = []
 
-	for file in os.listdir(os.getcwd()):
-		if file.endswith("_Type.out"):
-			hmmscan_out_files.append(file)
-	if len(hmmscan_out_files) != 1:
-		sys.exit("HMMER hmmscan output files were not created or more output files were found than created.")
+#	for file in os.listdir(os.getcwd()):
+#		if file.endswith("_Type.out"):
+#			hmmscan_out_files.append(file)
+#	if len(hmmscan_out_files) != 1:
+#		sys.exit("HMMER hmmscan output files were not created or more output files were found than created.")
 
 def Nterm_trim_hmm(hmmscan_out, original_seq_file):
 	"""
