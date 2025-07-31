@@ -32,7 +32,12 @@ For more details about arguments see [Input](#input).
 * (1) Path to directory containing HMM profiles to run sequences against. - (`path`)
 
 ### Required files for HMMER hmmscan
-* VSG N-terminal first pass TypeA and TypeB hmm profile ([Wickstead et al.](https://www.sciencedirect.com/science/article/pii/S0166685114000772)) - (`VSG-N-mergeAB.hmm`)
+Choose one directory for a classification strategy:
+* WicksteadCross ([Wickstead et al.](https://www.sciencedirect.com/science/article/pii/S0166685114000772))
+* Stebbins ([Đaković et al.](https://journals.plos.org/plosntds/article?id=10.1371/journal.pntd.0011621))
+
+Each contains three files:
+* VSG N-terminal first pass TypeA and TypeB hmm profile - (`VSG-N-mergeAB.hmm`)
 * VSG N-terminal second pass sequence recovery profile - (`VSG-N-DomainBoundary.hmm`)
 * VSG N-terminal TypeSubtype hmm profile - (`VSG-N-TypeSubtype.hmm`)
 
